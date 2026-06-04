@@ -17,9 +17,10 @@ import {
 } from "@/components/ui/select";
 import { CmsRichEditor } from "@/components/cms/cms-rich-editor";
 import { CmsTagInput } from "@/components/cms/cms-tag-input";
-import { CmsSeoFields } from "@/components/cms/cms-seo-fields";
+// SEO fields removed from admin UI
 import { CmsMediaPicker } from "@/components/cms/cms-media-picker";
 import { updatePostAction } from "@/app/actions/cms/posts";
+import { generateSlug } from "@/lib/slug";
 
 export function PostEditForm({ post }: { post: Post }) {
   const router = useRouter();
@@ -36,6 +37,11 @@ export function PostEditForm({ post }: { post: Post }) {
     }
   }
 
+  function handleTitleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const slugInput = document.getElementById("slug") as HTMLInputElement | null;
+    if (slugInput) slugInput.value = generateSlug(e.target.value);
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <input type="hidden" name="id" value={post.id} />
@@ -43,18 +49,15 @@ export function PostEditForm({ post }: { post: Post }) {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="title">Title *</Label>
-          <Input id="title" name="title" defaultValue={post.title} required />
+          <Input id="title" name="title" defaultValue={post.title} required onChange={handleTitleChange} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="slug">Slug</Label>
-          <Input id="slug" name="slug" defaultValue={post.slug} />
+          {/* Hidden slug: keep value but hide from editor */}
+          <input type="hidden" id="slug" name="slug" defaultValue={post.slug} />
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="excerpt">Excerpt *</Label>
-        <Textarea id="excerpt" name="excerpt" defaultValue={post.excerpt} required maxLength={200} rows={2} />
-      </div>
+      {/* Excerpt removed from admin form */}
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
@@ -88,10 +91,7 @@ export function PostEditForm({ post }: { post: Post }) {
 
       <CmsMediaPicker name="thumbnailId" label="Thumbnail" defaultValue={post.thumbnailId} />
 
-      <CmsSeoFields
-        defaultMetaTitle={post.seoMetaTitle ?? undefined}
-        defaultMetaDescription={post.seoMetaDescription ?? undefined}
-      />
+      {/* SEO fields removed from admin UI */}
 
       <div className="flex items-center gap-2">
         <input type="checkbox" id="isPublished" name="isPublished" defaultChecked={post.isPublished} />
