@@ -15,10 +15,11 @@ import {
 } from "@/components/ui/select";
 import { CmsRichEditor } from "@/components/cms/cms-rich-editor";
 import { CmsTagInput } from "@/components/cms/cms-tag-input";
-import { CmsSeoFields } from "@/components/cms/cms-seo-fields";
+// SEO fields removed: handled automatically or omitted
 import { CmsMediaPicker } from "@/components/cms/cms-media-picker";
 import { POST_CATEGORY_LABELS } from "@/types";
 import { createPostAction } from "@/app/actions/cms/posts";
+import { generateSlug } from "@/lib/slug";
 import type { PostCategory } from "@/types";
 
 export function PostForm() {
@@ -36,23 +37,25 @@ export function PostForm() {
     }
   }
 
+  function handleTitleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const slugInput = document.getElementById("slug") as HTMLInputElement | null;
+    if (slugInput) slugInput.value = generateSlug(e.target.value);
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="title">Title *</Label>
-          <Input id="title" name="title" required />
+          <Input id="title" name="title" required onChange={handleTitleChange} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="slug">Slug (otomatis)</Label>
-          <Input id="slug" name="slug" placeholder="auto-generated" />
+          {/* Hidden slug field: auto-generated from title */}
+          <input type="hidden" id="slug" name="slug" />
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="excerpt">Excerpt * (max 200 karakter)</Label>
-        <Textarea id="excerpt" name="excerpt" required maxLength={200} rows={2} />
-      </div>
+      {/* Excerpt removed from admin form */}
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
@@ -86,7 +89,7 @@ export function PostForm() {
 
       <CmsMediaPicker name="thumbnailId" label="Thumbnail" />
 
-      <CmsSeoFields />
+      {/* SEO fields removed from admin UI */}
 
       <div className="flex items-center gap-2">
         <input type="checkbox" id="isPublished" name="isPublished" />

@@ -16,7 +16,6 @@ export async function createPostAction(formData: FormData) {
 
   const title = String(formData.get("title") || "");
   const slug = String(formData.get("slug") || "") || generateSlug(title);
-  const excerpt = String(formData.get("excerpt") || "");
   const thumbnailId = String(formData.get("thumbnailId") || "") || undefined;
   const categoryRaw = String(formData.get("category") || "umum");
   const category = VALID_CATEGORIES.includes(categoryRaw as PostCategory)
@@ -25,9 +24,7 @@ export async function createPostAction(formData: FormData) {
   const content = String(formData.get("content") || "") || undefined;
   const author = String(formData.get("author") || "") || undefined;
   const isPublished = formData.get("isPublished") === "on";
-  const seoMetaTitle = String(formData.get("seoMetaTitle") || "") || undefined;
-  const seoMetaDescription = String(formData.get("seoMetaDescription") || "") || undefined;
-  const seoOgImageId = String(formData.get("seoOgImageId") || "") || undefined;
+  // SEO fields removed from admin form; not read from FormData
 
   const tagsJson = String(formData.get("tags") || "[]");
   let tags: string[] = [];
@@ -36,16 +33,14 @@ export async function createPostAction(formData: FormData) {
   await postsLib.createPost({
     title,
     slug,
-    excerpt,
+    // excerpt omitted (managed internally or via DB)
     thumbnailId,
     category,
     content,
     tags,
     author,
     isPublished,
-    seoMetaTitle,
-    seoMetaDescription,
-    seoOgImageId,
+    // SEO fields omitted
   });
 
   revalidatePath("/cms/posts");
@@ -61,8 +56,7 @@ export async function updatePostAction(formData: FormData) {
   if (!id) return;
 
   const title = String(formData.get("title") || "");
-  const slug = String(formData.get("slug") || "");
-  const excerpt = String(formData.get("excerpt") || "");
+   const slug = String(formData.get("slug") || "") || generateSlug(title);
   const thumbnailId = String(formData.get("thumbnailId") || "");
   const categoryRaw = String(formData.get("category") || "");
   const category = VALID_CATEGORIES.includes(categoryRaw as PostCategory)
@@ -71,9 +65,7 @@ export async function updatePostAction(formData: FormData) {
   const content = String(formData.get("content") || "");
   const author = String(formData.get("author") || "");
   const isPublished = formData.get("isPublished") === "on";
-  const seoMetaTitle = String(formData.get("seoMetaTitle") || "");
-  const seoMetaDescription = String(formData.get("seoMetaDescription") || "");
-  const seoOgImageId = String(formData.get("seoOgImageId") || "");
+  // SEO fields removed from admin form; not read from FormData
 
   const tagsJson = String(formData.get("tags") || "[]");
   let tags: string[] = [];
@@ -82,16 +74,14 @@ export async function updatePostAction(formData: FormData) {
   await postsLib.updatePost(id, {
     title: title || undefined,
     slug: slug || undefined,
-    excerpt: excerpt || undefined,
+    // excerpt omitted (managed internally or via DB)
     thumbnailId: thumbnailId || undefined,
     category,
     content: content || undefined,
     tags,
     author: author || undefined,
     isPublished,
-    seoMetaTitle: seoMetaTitle || undefined,
-    seoMetaDescription: seoMetaDescription || undefined,
-    seoOgImageId: seoOgImageId || undefined,
+    // SEO fields omitted
   });
 
   revalidatePath("/cms/posts");
