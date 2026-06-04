@@ -5,6 +5,7 @@ export type UserRole = "admin" | "sales";
 export type LeadStatus =
   | "new"
   | "contacted"
+  | "qualified"
   | "proposal_sent"
   | "won"
   | "lost"
@@ -50,6 +51,7 @@ export type LeadActivity = {
 export const LEAD_STATUS_LABELS: Record<LeadStatus, string> = {
   new: "New",
   contacted: "Contacted",
+  qualified: "Qualified",
   proposal_sent: "Proposal Sent",
   won: "Won",
   lost: "Lost",
