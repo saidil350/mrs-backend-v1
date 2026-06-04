@@ -1,0 +1,42 @@
+services:
+  crm:
+    build:
+      context: .
+    ports:
+      - "3002:3002"
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://mrs_crm:mrs_crm_pass@db:5432/mrs_crm}
+      CRM_SESSION_SECRET: ${CRM_SESSION_SECRET:-local_crm_session_secret_change_me}
+      PUBLIC_LEAD_SECRET: ${PUBLIC_LEAD_SECRET:-local_public_lead_secret}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-MRS CRM <no-reply@mrs.amanahapp.run>}
+      SALES_NOTIFICATION_EMAIL: ${SALES_NOTIFICATION_EMAIL:-}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_USER: mrs_crm
+      POSTGRES_PASSWORD: mrs_crm_pass
+      POSTGRES_DB: mrs_crm
+    volumes:
+      - crm_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mrs_crm -d mrs_crm"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  crm_pgdata:
