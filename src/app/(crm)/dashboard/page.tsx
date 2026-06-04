@@ -61,6 +61,7 @@ export default async function DashboardPage() {
       pipeline: {
         new: 0,
         contacted: 0,
+        qualified: 0,
         proposal_sent: 0,
         won: 0,
         lost: 0,

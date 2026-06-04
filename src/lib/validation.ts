@@ -27,7 +27,7 @@ export function normalizePhone(value: string) {
 }
 
 export function isValidLeadStatus(value: string): value is LeadStatus {
-  return ["new", "contacted", "proposal_sent", "won", "lost", "rejected"].includes(value);
+  return ["new", "contacted", "qualified", "proposal_sent", "won", "lost", "rejected"].includes(value);
 }
 
 export function hasHoneypot(body: Record<string, unknown>) {
